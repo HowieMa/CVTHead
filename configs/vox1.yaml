@@ -1,0 +1,17 @@
+exp: outputs_voxceleb1
+data:
+  path: VoxCeleb1/vox_video
+  meta: VoxCeleb1/vox_lmks_meta
+
+training:
+  num_workers: 12
+  batch_size: 16
+  print_every: 100
+  lr_G: 1e-4
+  lr_D: 4e-4
+  epochs: 200
+  epoch_milestones: [999]
+  model_selection_metric: L1
+  model_selection_mode: minimize
+
+
