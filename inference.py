@@ -86,7 +86,6 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='CVTHead Inference')
-    parser.add_argument('--config', type=str, help='Path to config file.')
     parser.add_argument('--src_pth', type=str, default="examples/1.png")
     parser.add_argument('--drv_pth', type=str, default="examples/2.png")
     parser.add_argument('--out_pth', type=str, default="examples/output.png")

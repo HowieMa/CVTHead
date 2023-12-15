@@ -14,18 +14,21 @@ password=$(urle $password)
 
 
 
+echo -e "\nDownloading pre-trained CVTHead..."
+FILEID=1CJL03b7kO45Pz9iG17gnlNJThXocD5Mt
+FILENAME=cvthead.pt
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='${FILEID} -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=${FILEID}" -O $FILENAME && rm -rf /tmp/co
 
 
-echo -e "\nDownloading deca_model..."
-FILEID=1gy9OJlVfBulWkIEnZhGpOLu084RgHw39
+echo -e "\nDownloading ResNet50 trained on VGGFace2 for face identity loss..."
+FILEID=17bGCDQLuXU81xqHF1MB6nBqpBO6PtPd2
 FILENAME=resnet50_scratch_weight.pth
 wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='${FILEID} -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=${FILEID}" -O $FILENAME && rm -rf /tmp/co
 
 
-
 echo -e "\nDownloading deca_model..."
 FILEID=1rp8kdyLPvErw2dTmqtjISRVvQLj6Yzje
-FILENAME=.deca_model.tar
+FILENAME=deca_model.tar
 wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='${FILEID} -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=${FILEID}" -O $FILENAME && rm -rf /tmp/co
 
 
