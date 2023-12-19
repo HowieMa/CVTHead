@@ -1,5 +1,7 @@
 # CVTHead
 Official Implementation of WACV 2024 paper, "CVTHead: One-shot Controllable Head Avatar with Vertex-feature Transformer"
+[arxiv](https://arxiv.org/pdf/2311.06443.pdf)
+
 
 ![framework](https://github.com/HowieMa/CVTHead/blob/main/assets/framework.png)
 
@@ -33,7 +35,7 @@ and put it under `data/` folder
 
 Here is a demo to use CVTHead for cross-identity face reenactment
 ~~~
-python inference.py --src_pth examples/1.png --drv_pth examples/2.png --out_pth examples/output.png --ckpt_pth data/cvtheat.pt
+python inference.py --src_pth examples/1.png --drv_pth examples/2.png --out_pth examples/output.png --ckpt_pth data/cvthead.pt
 ~~~
 
 ## Training
