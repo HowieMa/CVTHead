@@ -183,7 +183,7 @@ class CVTHead(nn.Module):
         self.pos_embedding = nn.Parameter(self._make_sine_position_embedding(EMB_DIM), requires_grad=False)
 
         # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mesh decoder >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        vtx_upsampler, down_transform_list = get_coarse_mesh_decoder(emb_dim=EMB_DIM, transform_fp = "datas/transform.pkl", down_degree=2)
+        vtx_upsampler, down_transform_list = get_coarse_mesh_decoder(emb_dim=EMB_DIM, transform_fp = "data/transform.pkl", down_degree=2)
         self.vtx_upsampler = vtx_upsampler
         self.num_v_coarse = down_transform_list[-1].shape[0]        # 314
         self.down_transform_list = down_transform_list
