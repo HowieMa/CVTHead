@@ -22,6 +22,7 @@ def preprocess_image(img_pth, fa, device="cuda"):
     img = img.resize((256, 256))
 
     img_npy = np.array(img)     # (H=256,W=256,3), val:0-255
+    img_npy = img_npy[:, :, :3]
     landmark = fa.get_landmarks(img_npy)[0]
     tform = get_deca_tform(landmark)    # (3,3)
           
@@ -68,6 +69,121 @@ def driven_by_face(model, src_pth, drv_pth, out_pth, device, softmask=True):
         predict_img.save(out_pth)
 
 
+def driven_by_flame_coefs(model, src_pth, out_pth, device, softmask=False):
+    # face landmark detector
+    fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device=device)
+
+    src_img, src_img_crop, src_tform = preprocess_image(src_pth, fa, device)
+    
+    with torch.no_grad():
+        pose = torch.zeros(1, 6).to(src_img.device) # (1, 6)    rotation (3) + jaw pose (3)
+
+        # ######################### shape ###############################
+        frames = []
+        for i in range(10):
+            shape = torch.zeros(1, 100).to(src_img.device) # (1, 100)
+            shape[0, 0] =  2 * i / 10 
+            outputs = model.flame_coef_generation(src_img_crop, src_img, src_tform, shape=shape, pose=pose)
+            predict_img = outputs["pred_drv_img"]   # (1,3,256,256), tensor, val:[-1,1]
+            predict_mask = outputs["pred_drv_mask"] # (1,256,256), tensor, val:[0, 1], soft mask
+
+            # visualize
+            predict_img = 0.5 * (predict_img + 1)
+            predict_img = predict_img[0].permute(1,2,0).cpu().numpy()   # (256,256,3), npy  
+            predict_mask = predict_mask[0].permute(1,2,0).cpu().numpy()   # (256,256,1), npy
+            if not softmask:
+                predict_mask = (predict_mask > 0.6) + 0.0     # (256,256,1), npy
+
+            # apply mask
+            predict_img = predict_img * predict_mask + (1 - predict_mask)  # apply mask to predicted image, val:[0, 1], npy
+            predict_img = (predict_img * 255).astype(np.uint8)
+            predict_img = Image.fromarray(predict_img)
+            frames.append(predict_img)
+            # predict_img.save("examples/shape_{}.png".format(i))
+        frame_one = frames[0]
+        
+        out_name = os.path.join(out_pth, "shape.gif")
+        frame_one.save(out_name, format="GIF", append_images=frames, save_all=True, duration=200, loop=0) 
+
+        # ######################### exp ###############################
+        frames = []
+        for i in range(10):
+            exp = torch.zeros(1, 100).to(src_img.device) # (1, 100)
+            exp[0, 0] = 2 * i / 10 
+            outputs = model.flame_coef_generation(src_img_crop, src_img, src_tform, exp=exp, pose=pose)
+            predict_img = outputs["pred_drv_img"]   # (1,3,256,256), tensor, val:[-1,1]
+            predict_mask = outputs["pred_drv_mask"] # (1,256,256), tensor, val:[0, 1], soft mask
+
+            # visualize
+            predict_img = 0.5 * (predict_img + 1)
+            predict_img = predict_img[0].permute(1,2,0).cpu().numpy()   # (256,256,3), npy  
+            predict_mask = predict_mask[0].permute(1,2,0).cpu().numpy()   # (256,256,1), npy
+            if not softmask:
+                predict_mask = (predict_mask > 0.6) + 0.0      # (256,256,1), npy
+
+            # apply mask
+            predict_img = predict_img * predict_mask + (1 - predict_mask)  # apply mask to predicted image, val:[0, 1], npy
+            predict_img = (predict_img * 255).astype(np.uint8)
+            predict_img = Image.fromarray(predict_img)
+            frames.append(predict_img)
+            # predict_img.save("examples/exp_{}.png".format(i))
+        frame_one = frames[0]
+        out_name = os.path.join(out_pth, "exp.gif")
+        frame_one.save(out_name, format="GIF", append_images=frames, save_all=True, duration=200, loop=0) 
+
+        # ######################### view ###############################
+        frames = []
+        for i in range(12):
+            pose = torch.zeros(1, 6).to(src_img.device) # (1, 100)
+            pose[0, 1] = - np.pi / 4 + i * np.pi / 24  
+            outputs = model.flame_coef_generation(src_img_crop, src_img, src_tform, pose=pose)
+            predict_img = outputs["pred_drv_img"]   # (1,3,256,256), tensor, val:[-1,1]
+            predict_mask = outputs["pred_drv_mask"] # (1,256,256), tensor, val:[0, 1], soft mask
+
+            # visualize
+            predict_img = 0.5 * (predict_img + 1)
+            predict_img = predict_img[0].permute(1,2,0).cpu().numpy()   # (256,256,3), npy  
+            predict_mask = predict_mask[0].permute(1,2,0).cpu().numpy()   # (256,256,1), npy
+            if not softmask:
+                predict_mask = (predict_mask > 0.6) + 0.0      # (256,256,1), npy
+
+            # apply mask
+            predict_img = predict_img * predict_mask + (1 - predict_mask)  # apply mask to predicted image, val:[0, 1], npy
+            predict_img = (predict_img * 255).astype(np.uint8)
+            predict_img = Image.fromarray(predict_img)
+            frames.append(predict_img)
+
+        frame_one = frames[0]
+        out_name = os.path.join(out_pth, "pose.gif")
+        frame_one.save(out_name, format="GIF", append_images=frames, save_all=True, duration=200, loop=0) 
+
+
+        # ######################### Jaw pose ###############################
+        frames = []
+        for i in range(12):
+            pose = torch.zeros(1, 6).to(src_img.device) # (1, 100)
+            pose[0, 3] = 0.5 * i / 12
+            outputs = model.flame_coef_generation(src_img_crop, src_img, src_tform, pose=pose)
+            predict_img = outputs["pred_drv_img"]   # (1,3,256,256), tensor, val:[-1,1]
+            predict_mask = outputs["pred_drv_mask"] # (1,256,256), tensor, val:[0, 1], soft mask
+
+            # visualize
+            predict_img = 0.5 * (predict_img + 1)
+            predict_img = predict_img[0].permute(1,2,0).cpu().numpy()   # (256,256,3), npy  
+            predict_mask = predict_mask[0].permute(1,2,0).cpu().numpy()   # (256,256,1), npy
+            if not softmask:
+                predict_mask = (predict_mask > 0.6) + 0.0      # (256,256,1), npy
+
+            # apply mask
+            predict_img = predict_img * predict_mask + (1 - predict_mask)  # apply mask to predicted image, val:[0, 1], npy
+            predict_img = (predict_img * 255).astype(np.uint8)
+            predict_img = Image.fromarray(predict_img)
+            frames.append(predict_img)
+
+        frame_one = frames[0]
+        out_name = os.path.join(out_pth, "jaw.gif")
+        frame_one.save(out_name, format="GIF", append_images=frames, save_all=True, duration=200, loop=0) 
+
 def main(args):
     device = "cuda"
 
@@ -81,7 +197,10 @@ def main(args):
     model.load_state_dict(ckpt, strict=False)
     print(f'-- Number of parameters (G): {sum(p.numel() for p in model.parameters())/1e6} M\n')
 
-    driven_by_face(model, args.src_pth, args.drv_pth, args.out_pth, device, softmask=True)
+    if args.flame:
+        driven_by_flame_coefs(model, args.src_pth, args.out_pth, device, softmask=True)
+    else:
+        driven_by_face(model, args.src_pth, args.drv_pth, args.out_pth, device, softmask=True)
 
 
 if __name__ == '__main__':
@@ -90,6 +209,7 @@ if __name__ == '__main__':
     parser.add_argument('--drv_pth', type=str, default="examples/2.png")
     parser.add_argument('--out_pth', type=str, default="examples/output.png")
     parser.add_argument('--ckpt_pth', type=str, default="data/cvthead.pt")
+    parser.add_argument('--flame', action='store_true')
     args = parser.parse_args()
 
     main(args)

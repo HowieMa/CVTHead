@@ -398,8 +398,11 @@ class CVTHead(nn.Module):
         return outputs
     
 
-    def flame_coef_generation(self, crop_src_img, src_img, src_tform, hair_deform=True, shape=None, exp=None,):
-        # 
+    def flame_coef_generation(self, crop_src_img, src_img, src_tform, hair_deform=True, shape=None, exp=None, pose=None):
+        # crop_src_img (1,3,H,W)
+        # shape_diff, (1, 100)
+        # exp, (1, 50)
+        # pose, (1, 6)
         b, _, H, W = src_img.shape       # (256, 256)
 
         outputs = {}
@@ -421,14 +424,25 @@ class CVTHead(nn.Module):
             src_outputs = self.deca.decode(src_codedict, rendering=False, vis_lmk=False, return_vis=False, use_detail=False)
             src_verts = src_outputs["verts"]   # (B, V, 3) in canonical space
 
-            # get drv codedict from 
+            # get drv codedict from given parameters
             # drv codedict (shape, exp, )
             drv_codedict = copy.deepcopy(src_codedict)
-            drv_codedict["shape"] = ...
+            
+            # shape change 
+            if shape is not None:
+                drv_codedict["shape"] = shape      # exchange shape !!! 
+
+            # expression change
+            if exp is not None:
+                drv_codedict["shape"] = exp
+            
+            if pose is not None:
+                drv_codedict["pose"] = pose
+
+
             drv_outputs = self.deca.decode(drv_codedict, rendering=False, vis_lmk=False, return_vis=False, use_detail=False)
             drv_verts = drv_outputs["verts"]   # (B, V, 3) in canonical space
 
-            drv_verts = src_verts
             # 2) Add deformation to driving image
             if hair_deform:
                 vtx_deform = self.forward_vtx_deform(src_img)       # (B, V, 3)
@@ -440,7 +454,7 @@ class CVTHead(nn.Module):
 
             # project vertices in canonical space to 2D image space
             src_trans_verts_aug = self.verts_aug_transfer(src_verts_aug, src_codedict["cam"], src_tform, H, W)  # (B, V, 3), val: (u,v,d),[-1,1]
-            drv_trans_verts_aug = self.verts_aug_transfer(drv_verts_aug, drv_codedict["cam"], drv_tform, H, W)  # (B, V, 3)
+            drv_trans_verts_aug = self.verts_aug_transfer(drv_verts_aug, drv_codedict["cam"], src_tform, H, W)  # (B, V, 3)
 
         # 3) Vertices Feature Transformer 
         vtx_descriptor = self.foward_vtx_feat(src_img, src_mask, src_trans_verts_aug)  # (B, V=5023, C)
