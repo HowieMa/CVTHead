@@ -8,10 +8,19 @@ Official Implementation of WACV 2024 paper, "CVTHead: One-shot Controllable Head
 **Efficient** and **controllable** head avatar generation from a single image with **point-based neural rendering**. 
 
 
-<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/shape.gif" alt="novel shape" width="150" height="150">
-<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/pose.gif" alt="novel expression" width="150" height="150">
-<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/exp.gif" alt="novel expression" width="150" height="150">
-<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/jaw.gif" alt="novel expression" width="150" height="150">
+
+<div class="image-container">
+  <img src="https://github.com/HowieMa/CVTHead/blob/main/examples/shape.gif" alt="novel shape" width="150" height="150">
+  <img src="https://github.com/HowieMa/CVTHead/blob/main/examples/pose.gif" alt="novel expression" width="150" height="150">
+  <img src="https://github.com/HowieMa/CVTHead/blob/main/examples/exp.gif" alt="novel expression" width="150" height="150">
+  <img src="https://github.com/HowieMa/CVTHead/blob/main/examples/jaw.gif" alt="novel expression" width="150" height="150">
+</div>
+
+.image-container {
+    display: flex;
+    justify-content: space-around; 
+    align-items: center; 
+}
 
 
 ![framework](https://github.com/HowieMa/CVTHead/blob/main/assets/framework.png)
