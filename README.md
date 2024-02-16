@@ -16,11 +16,11 @@ Official Implementation of WACV 2024 paper, "CVTHead: One-shot Controllable Head
   <img src="https://github.com/HowieMa/CVTHead/blob/main/examples/jaw.gif" alt="novel expression" width="150" height="150">
 </div>
 
-.image-container {
+<!-- .image-container {
     display: flex;
     justify-content: space-around; 
     align-items: center; 
-}
+} -->
 
 
 ![framework](https://github.com/HowieMa/CVTHead/blob/main/assets/framework.png)
