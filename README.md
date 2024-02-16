@@ -5,12 +5,14 @@ Official Implementation of WACV 2024 paper, "CVTHead: One-shot Controllable Head
 [![arXiv](https://img.shields.io/badge/arXiv-2311.svg)](https://arxiv.org/abs/2311.06443)
 
 
-<u>Efficient</u> and <u>controllable</u> head avatar generation from a single image with <u>point-based neural rendering</u>
+**Efficient** and **controllable** head avatar generation from a single image with **point-based neural rendering**. 
 
-![shape](https://github.com/HowieMa/CVTHead/blob/main/examples/shape.gif)
-![exp](https://github.com/HowieMa/CVTHead/blob/main/examples/exp.gif)
-![pose](https://github.com/HowieMa/CVTHead/blob/main/examples/pose.gif)
-![jaw](https://github.com/HowieMa/CVTHead/blob/main/examples/jaw.gif)
+
+<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/shape.gif" alt="novel shape" width="150" height="150">
+<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/pose.gif" alt="novel expression" width="150" height="150">
+<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/exp.gif" alt="novel expression" width="150" height="150">
+<img src="https://github.com/HowieMa/CVTHead/blob/main/examples/jaw.gif" alt="novel expression" width="150" height="150">
+
 
 ![framework](https://github.com/HowieMa/CVTHead/blob/main/assets/framework.png)
 
