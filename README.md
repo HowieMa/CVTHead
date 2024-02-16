@@ -1,8 +1,16 @@
 # CVTHead
 Official Implementation of WACV 2024 paper, "CVTHead: One-shot Controllable Head Avatar with Vertex-feature Transformer"
 
+
 [![arXiv](https://img.shields.io/badge/arXiv-2311.svg)](https://arxiv.org/abs/2311.06443)
 
+
+<u>Efficient</u> and <u>controllable</u> head avatar generation from a single image with <u>point-based neural rendering</u>
+
+![shape](https://github.com/HowieMa/CVTHead/blob/main/examples/shape.gif)
+![exp](https://github.com/HowieMa/CVTHead/blob/main/examples/exp.gif)
+![pose](https://github.com/HowieMa/CVTHead/blob/main/examples/pose.gif)
+![jaw](https://github.com/HowieMa/CVTHead/blob/main/examples/jaw.gif)
 
 ![framework](https://github.com/HowieMa/CVTHead/blob/main/assets/framework.png)
 
