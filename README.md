@@ -50,7 +50,7 @@ Please go to `data/README.md` for more details.
 
 ## Inference
 
-Download our pre-trained model `cvthead.pt` from [Google Drive](https://drive.google.com/drive/folders/1WZV6cOisgVZcQKK6scspTSSbmshCHAWM?usp=drive_link)
+Download our pre-trained model `cvthead.pt` from [Google Drive](https://drive.google.com/drive/folders/1WZV6cOisgVZcQKK6scspTSSbmshCHAWM?usp=sharing)
 and put it under `data/` folder
 
 Here is a demo to use CVTHead for cross-identity face reenactment
